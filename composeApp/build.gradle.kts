@@ -88,6 +88,10 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.kotlinx.serialization)
+
+            //Coil
+            implementation(libs.coil)
+            implementation(libs.coil.network)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
