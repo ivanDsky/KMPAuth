@@ -92,6 +92,11 @@ kotlin {
             //Coil
             implementation(libs.coil)
             implementation(libs.coil.network)
+
+            //Auth
+            implementation(libs.kmpauth.google)
+            implementation(libs.kmpauth.firebase)
+            implementation(libs.kmpauth.ui)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

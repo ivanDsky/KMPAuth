@@ -19,7 +19,3 @@ fun createHttpClient() : HttpClient =
             )
         }
     }
-
-val httpClientModule = module {
-    single { createHttpClient() }
-}
