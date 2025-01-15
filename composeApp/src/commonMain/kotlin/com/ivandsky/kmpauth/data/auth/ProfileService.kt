@@ -21,11 +21,11 @@ class ProfileService(
 ) {
     fun profile(): Flow<NetworkState<ProfileResponse>> = flow {
         emit(NetworkState.Loading)
-        val response = httpClient.get("$URL/user/")
+        val response = httpClient.get(URL)
         emit(NetworkState.Result(response.body()))
     }
 
     companion object {
-        const val URL = "localhost:8000"
+        const val URL = "http://192.168.0.120:8000/user/"
     }
 }

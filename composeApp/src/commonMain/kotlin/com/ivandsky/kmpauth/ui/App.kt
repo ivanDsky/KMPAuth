@@ -10,7 +10,6 @@ import com.ivandsky.kmpauth.di.networkModule
 import com.ivandsky.kmpauth.di.serviceModule
 import com.ivandsky.kmpauth.di.viewModelModule
 import com.ivandsky.kmpauth.ui.auth.login.LoginScreen
-import com.ivandsky.kmpauth.ui.profile.ProfileScreen
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -32,7 +31,7 @@ fun App() {
 
         MaterialTheme {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                ProfileScreen()
+                LoginScreen()
             }
         }
     }

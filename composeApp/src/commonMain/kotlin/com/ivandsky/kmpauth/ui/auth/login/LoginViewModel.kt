@@ -36,7 +36,7 @@ class LoginViewModel(
             LoginRequest(loginState.value.email, loginState.value.password)
         ).onEach { s ->
             when(s) {
-                is NetworkState.Result -> _loginState.update { it.copy(isLoading = false) }
+                is NetworkState.Result -> _loginState.update { it.copy(isLoading = false, email = s.data.token) }
                 is NetworkState.Error -> TODO()
                 NetworkState.Loading -> _loginState.update { it.copy(isLoading = true) }
             }
