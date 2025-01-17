@@ -33,26 +33,6 @@ kotlin {
     
     jvm("desktop")
     
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        moduleName = "composeApp"
-        browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
-            }
-        }
-        binaries.executable()
-    }
-    
     sourceSets {
         val desktopMain by getting
         
@@ -88,6 +68,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.kotlinx.serialization)
+            implementation(libs.ktor.client.auth)
 
             //Coil
             implementation(libs.coil)
@@ -97,6 +78,10 @@ kotlin {
             implementation(libs.kmpauth.google)
             implementation(libs.kmpauth.firebase)
             implementation(libs.kmpauth.ui)
+
+            //Datastore
+            implementation(libs.datastore.core)
+            implementation(libs.datastore.preferences)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

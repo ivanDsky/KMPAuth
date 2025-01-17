@@ -23,6 +23,7 @@ koin-bom = "4.1.0-Beta5"
 ktor = "3.0.3"
 coil = "3.0.4"
 kmpauth = "2.3.1"
+datastore = "1.1.1"
 
 [libraries]
 kmpauth-firebase-vversion = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauthFirebase" }
@@ -50,12 +51,15 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-kotlinx-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 coil = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
 kmpauth-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauth" }
 kmpauth-ui = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
+datastore-core = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

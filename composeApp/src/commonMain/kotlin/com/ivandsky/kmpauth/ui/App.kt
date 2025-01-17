@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ivandsky.kmpauth.di.dataStoreModule
 import com.ivandsky.kmpauth.di.networkModule
 import com.ivandsky.kmpauth.di.serviceModule
 import com.ivandsky.kmpauth.di.viewModelModule
@@ -20,7 +21,7 @@ import org.koin.compose.KoinApplication
 fun App() {
     KoinApplication(
         application = {
-            modules(networkModule, serviceModule, viewModelModule)
+            modules(networkModule, serviceModule, viewModelModule, dataStoreModule)
         }
     ) {
         GoogleAuthProvider.create(credentials =
