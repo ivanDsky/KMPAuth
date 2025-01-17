@@ -1,5 +1,6 @@
 package com.ivandsky.kmpauth.network
 
+import com.ivandsky.kmpauth.local.AuthDataStore
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.auth.Auth
@@ -12,7 +13,7 @@ import org.koin.dsl.module
 
 expect fun createHttpClientEngine() : HttpClientEngine
 
-fun createHttpClient() : HttpClient =
+fun createHttpClient(authDataStore: AuthDataStore) : HttpClient =
     HttpClient(createHttpClientEngine()) {
         install(ContentNegotiation) {
             json(
@@ -21,4 +22,12 @@ fun createHttpClient() : HttpClient =
                 }
             )
         }
+//        install(Auth) {
+//            bearer {
+//                loadTokens {
+//                    val token = authDataStore.getToken()
+//                    token?.let { BearerTokens(accessToken = it, refreshToken = null) }
+//                }
+//            }
+//        }
     }

@@ -3,6 +3,7 @@ package com.ivandsky.kmpauth.ui.profile
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,8 @@ fun ProfileScreen(
     val state by viewModel.profileState.collectAsState()
     ProfileContainer(
         profileState = state,
-        modifier = modifier
+        modifier = modifier,
+        onLogout = viewModel::logout
     )
 }
 
@@ -31,6 +33,7 @@ fun ProfileScreen(
 fun ProfileContainer(
     profileState: ProfileState,
     modifier: Modifier = Modifier,
+    onLogout: () -> Unit = {},
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         when(profileState) {
@@ -48,6 +51,10 @@ fun ProfileContainer(
                     model = profileState.avatarUrl,
                     contentDescription = null,
                 )
+
+                Button(onClick = onLogout) {
+                    Text("Logout")
+                }
             }
             ProfileState.Loading -> CircularProgressIndicator()
         }

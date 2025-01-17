@@ -4,5 +4,5 @@ import com.ivandsky.kmpauth.network.createHttpClient
 import org.koin.dsl.module
 
 val networkModule = module {
-    single { createHttpClient() }
+    single { createHttpClient(get()) }
 }

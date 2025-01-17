@@ -13,6 +13,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mmk.kmpauth.google.GoogleButtonUiContainer
+import com.mmk.kmpauth.google.GoogleUser
+import com.mmk.kmpauth.uihelper.google.GoogleSignInButton
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -26,6 +29,7 @@ fun LoginScreen(
         loginData = loginData,
         onEmailChange = viewModel::onEmailChanged,
         onPasswordChange = viewModel::onPasswordChanged,
+        onGoogleSignIn = viewModel::onGoogleSignIn,
         onLogin = viewModel::login
     )
 }
@@ -36,6 +40,7 @@ private fun LoginContainer(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLogin: () -> Unit,
+    onGoogleSignIn: (GoogleUser?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isInputBlocked = loginData.isLoading
@@ -51,6 +56,10 @@ private fun LoginContainer(
             } else {
                 Text(text = "Sign in")
             }
+        }
+
+        GoogleButtonUiContainer(onGoogleSignInResult = onGoogleSignIn) {
+            GoogleSignInButton(onClick = this::onClick)
         }
     }
 }

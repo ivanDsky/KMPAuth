@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val serviceModule = module {
     single { AuthService(get()) }
-    single { ProfileService(get()) }
+    single { ProfileService(get(), get()) }
 }

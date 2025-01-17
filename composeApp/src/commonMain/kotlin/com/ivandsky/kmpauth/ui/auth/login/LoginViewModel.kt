@@ -8,12 +8,14 @@ import com.ivandsky.kmpauth.data.auth.AuthService
 import com.ivandsky.kmpauth.data.auth.LoginRequest
 import com.ivandsky.kmpauth.local.AuthDataStore
 import com.ivandsky.kmpauth.util.NetworkState
+import com.mmk.kmpauth.google.GoogleUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class LoginData(
     val email: String = "",
@@ -40,6 +42,12 @@ class LoginViewModel(
 
     fun onPasswordChanged(password: String) {
         _loginState.update { it.copy(password = password) }
+    }
+
+    fun onGoogleSignIn(googleUser: GoogleUser?) {
+        viewModelScope.launch {
+            googleUser?.idToken?.let { authDataStore.saveToken(it) }
+        }
     }
 
     fun login() {

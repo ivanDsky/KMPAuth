@@ -19,6 +19,10 @@ class AuthDataStore(
         dataStore.edit { it[TOKEN_KEY] = token }
     }
 
+    suspend fun clearToken() {
+        dataStore.edit { it.remove(TOKEN_KEY) }
+    }
+
     companion object {
         val TOKEN_KEY = stringPreferencesKey("TOKEN")
     }
