@@ -1,4 +1,4 @@
-package com.ivandsky.kmpauth.ui.auth.login
+package com.ivandsky.kmpauth.ui.auth.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,14 +17,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -39,12 +43,13 @@ import com.ivandsky.kmpauth.ui.common.ErrorMessage
 import com.ivandsky.kmpauth.ui.common.GradientButton
 import org.koin.compose.viewmodel.koinViewModel
 
+
 @Composable
-fun LoginScreen(
-    modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel()
+fun RegisterScreen(
+    viewModel: RegisterViewModel = koinViewModel(),
+    modifier: Modifier = Modifier
 ) {
-    val state by viewModel.loginState.collectAsState()
+    val state by viewModel.registerState.collectAsState()
     val focusManager = LocalFocusManager.current
 
     Box(
@@ -73,7 +78,7 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Welcome Back",
+                    text = "Register",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 32.dp)
@@ -87,9 +92,19 @@ fun LoginScreen(
                     )
                 } else {
                     CustomTextField(
-                        state = state.usernameEmail,
+                        state = state.username,
+                        onValueChange = viewModel::onUsernameChanged,
+                        label = "Username",
+                        leadingIcon = Icons.Default.Person,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CustomTextField(
+                        state = state.email,
                         onValueChange = viewModel::onEmailChanged,
-                        label = "Email/Username",
+                        label = "Email",
                         leadingIcon = Icons.Default.Email,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -105,14 +120,25 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CustomTextField(
+                        state = state.passwordConfirmation,
+                        onValueChange = viewModel::onPasswordConfirmationChanged,
+                        label = "Password Confirmation",
+                        leadingIcon = Icons.Default.Lock,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Row {
                         GradientButton(
-                            text = "Sign In",
+                            text = "Sign Up",
                             isLoading = state.isLoading,
                             onClick = {
-                                viewModel.login()
+                                viewModel.register()
                                 focusManager.clearFocus()
                             },
                             modifier = Modifier.weight(1f)
@@ -121,12 +147,12 @@ fun LoginScreen(
                         Spacer(modifier = Modifier.width(24.dp))
 
                         GradientButton(
-                            text = "Sign Up",
+                            text = "Sign In",
+                            gradientBrush = SolidColor(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.4f)),
                             onClick = {
-                                viewModel.navigateToRegister()
+                                viewModel.navigateToLogin()
                                 focusManager.clearFocus()
                             },
-                            gradientBrush = SolidColor(MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.4f)),
                             modifier = Modifier.weight(1f)
                         )
                     }

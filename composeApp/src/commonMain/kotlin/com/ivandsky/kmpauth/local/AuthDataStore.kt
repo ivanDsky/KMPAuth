@@ -15,15 +15,27 @@ class AuthDataStore(
     fun getTokenFlow(): Flow<String?> = dataStore.data.map { it[TOKEN_KEY] }.distinctUntilChanged()
     suspend fun getToken() = getTokenFlow().first()
 
+    fun getEmailFlow(): Flow<String?> = dataStore.data.map { it[EMAIL_KEY] }.distinctUntilChanged()
+    suspend fun getEmail() = getEmailFlow().first()
+
     suspend fun saveToken(token: String) {
         dataStore.edit { it[TOKEN_KEY] = token }
+    }
+
+    suspend fun saveEmail(email: String) {
+        dataStore.edit { it[EMAIL_KEY] = email }
     }
 
     suspend fun clearToken() {
         dataStore.edit { it.remove(TOKEN_KEY) }
     }
 
+    suspend fun clearEmail() {
+        dataStore.edit { it.remove(EMAIL_KEY) }
+    }
+
     companion object {
         val TOKEN_KEY = stringPreferencesKey("TOKEN")
+        val EMAIL_KEY = stringPreferencesKey("EMAIL")
     }
 }
