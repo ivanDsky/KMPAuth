@@ -13,10 +13,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProfileResponse(
+    val id: Long,
     val username: String,
     val email: String,
     val avatar: String? = null,
     val enabled: Boolean,
+    val roles: List<String>,
 )
 
 class ProfileService(
@@ -25,12 +27,20 @@ class ProfileService(
 ) {
     fun profile(): Flow<NetworkState<ProfileResponse>> = networkRequestFlow {
         val token = authDataStore.getToken()
-        httpClient.get(URL) {
+        httpClient.get("$URL/") {
+            headers { append(HttpHeaders.Authorization, "Bearer $token") }
+        }
+    }
+
+    fun allProfiles(): Flow<NetworkState<List<ProfileResponse>>> = networkRequestFlow {
+        val token = authDataStore.getToken()
+        println(token)
+        httpClient.get("$URL/all") {
             headers { append(HttpHeaders.Authorization, "Bearer $token") }
         }
     }
 
     companion object {
-        const val URL = "${NetworkConstants.ROOT_URL}/user/"
+        const val URL = "${NetworkConstants.ROOT_URL}/user"
     }
 }

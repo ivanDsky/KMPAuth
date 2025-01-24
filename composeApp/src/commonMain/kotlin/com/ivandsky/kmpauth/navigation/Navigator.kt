@@ -1,14 +1,12 @@
 package com.ivandsky.kmpauth.navigation
 
-import androidx.navigation.NavOptions
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 sealed interface NavigationEvent {
     class NavigateTo(
         val screen: Screen,
-        val clearStack: Boolean = false,
-        val navOptions: NavOptions? = null
+        val clearStack: Boolean = false
     ) : NavigationEvent
 }
 

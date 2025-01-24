@@ -1,57 +1,77 @@
 package com.ivandsky.kmpauth.ui.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ivandsky.kmpauth.data.auth.ProfileService
-import com.ivandsky.kmpauth.local.AuthDataStore
+import com.ivandsky.kmpauth.navigation.NavigationEvent
+import com.ivandsky.kmpauth.navigation.Navigator
+import com.ivandsky.kmpauth.navigation.ProfileScreen
+import com.ivandsky.kmpauth.navigation.ProfilesScreen
 import com.ivandsky.kmpauth.usecase.LogoutUseCase
 import com.ivandsky.kmpauth.util.NetworkState
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import kotlinx.coroutines.delay
+import com.ivandsky.kmpauth.util.serializableType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import kotlin.random.Random
 
-sealed interface ProfileState {
-    data class Data(
-        val name: String,
-        val email: String,
-        val avatarUrl: String,
-        val isVerified: Boolean,
-    ) : ProfileState
+@Serializable
+data class ProfileItem(
+    val id: Long = -1,
+    val username: String = "",
+    val email: String = "",
+    val avatarUrl: String? = null,
+    val role: String = "",
+    val isVerified: Boolean = false,
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
 
-    data object Loading : ProfileState
-}
+fun ProfileItem.isAdmin(): Boolean = role == "Admin"
 
 class ProfileViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val profileService: ProfileService,
+    private val navigator: Navigator,
     private val logoutUseCase: LogoutUseCase,
-    private val authDataStore: AuthDataStore,
 ) : ViewModel() {
-    private val _profileState = MutableStateFlow<ProfileState>(ProfileState.Loading)
+    private val _profileState = MutableStateFlow<ProfileItem>(ProfileItem(isLoading = true))
     val profileState = _profileState.asStateFlow()
 
     init {
-        authDataStore.getTokenFlow().filterNotNull().onEach {
-            profileService.profile().collect { state ->
-                when(state) {
-                    is NetworkState.Result -> _profileState.value = ProfileState.Data(
-                        state.data.username, state.data.email, state.data.avatar ?: "", state.data.enabled
+        //val data = savedStateHandle.toRoute<ProfileScreen>()
+        profileService.profile().onEach { state ->
+            when(state) {
+                is NetworkState.Result -> _profileState.update {
+                    it.copy(
+                        id = state.data.id,
+                        username = state.data.username,
+                        email = state.data.email,
+                        role = state.data.roles.first(),
+                        avatarUrl = state.data.avatar ?: "",
+                        isVerified = state.data.enabled,
+                        isLoading = false,
+                        error = null
                     )
-                    is NetworkState.Error -> TODO()
-                    NetworkState.Loading -> _profileState.value = ProfileState.Loading
+                }
+                is NetworkState.Error -> _profileState.update {
+                    it.copy(isLoading = false, error = state.error)
+                }
+                NetworkState.Loading -> _profileState.update {
+                    it.copy(isLoading = true, error = null)
                 }
             }
         }.launchIn(viewModelScope)
+
+    }
+
+    fun navigateToProfiles() = viewModelScope.launch {
+        navigator.navigate(NavigationEvent.NavigateTo(ProfilesScreen))
     }
 
     fun logout() = viewModelScope.launch {

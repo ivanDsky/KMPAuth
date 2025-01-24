@@ -24,6 +24,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.ivandsky.kmpauth.ui.common.ErrorMessage
 import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,29 +63,34 @@ fun ProfileScreen(
             TopAppBar(
                 title = { Text("Profile", fontSize = 18.sp) },
                 actions = {
+                    if(state.isAdmin()){
+                        IconButton(onClick = viewModel::navigateToProfiles) {
+                            Icon(Icons.Default.Person, null)
+                        }
+                    }
                     IconButton(onClick = viewModel::logout) {
-                        Icon(Icons.AutoMirrored.Default.ExitToApp, "Logout")
+                        Icon(Icons.AutoMirrored.Default.ExitToApp, null)
                     }
                 }
             )
         }
     ) { padding ->
-        when(state) {
-            is ProfileState.Data -> {
-                ProfileContent(
-                    state = state as ProfileState.Data,
-                    modifier = Modifier.padding(padding)
-                )
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-            ProfileState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+        } else {
+            ProfileContent(
+                state = state,
+                modifier = Modifier.padding(padding)
+            )
+            state.error?.let {
+                ErrorMessage(text = it)
             }
         }
     }
@@ -89,7 +98,7 @@ fun ProfileScreen(
 
 @Composable
 private fun ProfileContent(
-    state: ProfileState.Data,
+    state: ProfileItem,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -129,7 +138,7 @@ private fun ProfileContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = state.name,
+            text = state.username,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -156,6 +165,11 @@ private fun ProfileContent(
                     label = "Account Status",
                     value = if (state.isVerified) "Verified" else "Unverified",
                     icon = if(state.isVerified) Icons.Default.Check else Icons.Default.Close
+                )
+                ProfileInfoItem(
+                    label = "Roles",
+                    value = state.role,
+                    icon = Icons.Default.Settings
                 )
             }
         }

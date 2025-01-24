@@ -34,7 +34,6 @@ fun GradientButton(
         endX = 1000f
     )
 ) {
-    Brush
     Button(
         onClick = onClick,
         modifier = modifier

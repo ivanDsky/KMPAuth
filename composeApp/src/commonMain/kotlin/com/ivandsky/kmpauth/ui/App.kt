@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavOptions
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,12 +18,12 @@ import com.ivandsky.kmpauth.navigation.NavigationEvent
 import com.ivandsky.kmpauth.navigation.Navigator
 import com.ivandsky.kmpauth.navigation.OTPScreen
 import com.ivandsky.kmpauth.navigation.ProfileScreen
+import com.ivandsky.kmpauth.navigation.ProfilesScreen
 import com.ivandsky.kmpauth.navigation.RegisterScreen
 import com.ivandsky.kmpauth.ui.auth.login.LoginScreen
 import com.ivandsky.kmpauth.ui.auth.otp.OTPScreen
 import com.ivandsky.kmpauth.ui.auth.register.RegisterScreen
-import com.ivandsky.kmpauth.ui.profile.ProfileScreen
-import com.ivandsky.kmpauth.usecase.AuthenticationWatcher
+import com.ivandsky.kmpauth.ui.profiles.ProfileListScreen
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -68,7 +66,7 @@ fun Navigator(
                             }
                         }
                     } else {
-                        navController.navigate(it.screen, navOptions = it.navOptions)
+                        navController.navigate(it.screen)
                     }
                 }
             }
@@ -87,7 +85,10 @@ fun Navigator(
             RegisterScreen()
         }
         composable<ProfileScreen> {
-            ProfileScreen()
+            com.ivandsky.kmpauth.ui.profile.ProfileScreen()
+        }
+        composable<ProfilesScreen> {
+            ProfileListScreen()
         }
         composable<OTPScreen> {
             OTPScreen()
