@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,8 +40,6 @@ fun App() {
             modules(networkModule, serviceModule, viewModelModule, dataStoreModule, useCaseModule, navigationModule)
         }
     ) {
-        val authenticationWatcher = koinInject<AuthenticationWatcher>()
-
         GoogleAuthProvider.create(credentials =
             GoogleAuthCredentials(
                 serverId = "125815290751-5ob84urrher3sab4nvp6u2f3j50rcnf6.apps.googleusercontent.com"
@@ -60,7 +60,17 @@ fun Navigator(
     LaunchedEffect(navigator, navController) {
         navigator.navigationEvents.collect {
             when(it) {
-                is NavigationEvent.NavigateTo -> navController.navigate(it.screen)
+                is NavigationEvent.NavigateTo -> {
+                    if(it.clearStack) {
+                        navController.navigate(it.screen) {
+                            navController.currentBackStackEntry?.destination?.route?.let { route ->
+                                popUpTo(route) { inclusive =  true }
+                            }
+                        }
+                    } else {
+                        navController.navigate(it.screen, navOptions = it.navOptions)
+                    }
+                }
             }
         }
     }

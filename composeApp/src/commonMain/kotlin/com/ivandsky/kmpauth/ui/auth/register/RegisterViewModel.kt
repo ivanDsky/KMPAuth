@@ -60,11 +60,11 @@ class RegisterViewModel(
     }
 
     fun navigateToLogin() = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(LoginScreen))
+        navigator.navigate(NavigationEvent.NavigateTo(LoginScreen, clearStack = true))
     }
 
     fun navigateToOTP() = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(OTPScreen))
+        navigator.navigate(NavigationEvent.NavigateTo(OTPScreen, clearStack = true))
     }
 
     private suspend fun validateAll(): Boolean {

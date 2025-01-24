@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
     single { LogoutUseCase(get(), get()) }
-    single { AuthenticationWatcher(get(), get()) }
+    single(createdAtStart = true) { AuthenticationWatcher(get(), get()) }
 }

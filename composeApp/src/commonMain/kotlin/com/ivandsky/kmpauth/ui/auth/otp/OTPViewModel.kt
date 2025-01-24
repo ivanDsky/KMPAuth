@@ -84,7 +84,7 @@ class OTPViewModel(
     }
 
     fun navigateToLogin() = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(LoginScreen))
+        navigator.navigate(NavigationEvent.NavigateTo(LoginScreen, clearStack = true))
     }
 
     private fun startCountdown() {

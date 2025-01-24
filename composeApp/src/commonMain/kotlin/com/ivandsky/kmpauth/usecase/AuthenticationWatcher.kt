@@ -18,8 +18,8 @@ class AuthenticationWatcher(
     private val scope = CoroutineScope(Dispatchers.IO)
     init {
         authDataStore.getTokenFlow().onEach {
-            if(it == null) navigator.navigate(NavigationEvent.NavigateTo(LoginScreen))
-            else navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen))
+            if(it == null) navigator.navigate(NavigationEvent.NavigateTo(LoginScreen, clearStack = true))
+            else navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen, clearStack = true))
         }.launchIn(scope)
     }
 }

@@ -53,11 +53,11 @@ class LoginViewModel(
     }
 
     fun navigateToRegister() = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(RegisterScreen))
+        navigator.navigate(NavigationEvent.NavigateTo(RegisterScreen, clearStack = true))
     }
 
     fun navigateToProfile() = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen))
+        navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen, clearStack = true))
     }
 
     private suspend fun validateAll(): Boolean {
