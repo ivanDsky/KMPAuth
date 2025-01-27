@@ -1,6 +1,11 @@
 package com.ivandsky.kmpauth.navigation
 
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
+import com.ivandsky.kmpauth.ui.profile.ProfileItem
+import com.ivandsky.kmpauth.util.serializableType
 import kotlinx.serialization.Serializable
+import kotlin.reflect.typeOf
 
 interface Screen {
     val title: String
@@ -17,8 +22,16 @@ data object RegisterScreen : Screen {
 }
 
 @Serializable
-class ProfileScreen() : Screen {
+class ProfileScreen(val profileItem: ProfileItem = ProfileItem(id = -1)) : Screen {
     override val title: String = "Profile"
+
+    companion object {
+        val typeMap = mapOf(
+            typeOf<ProfileItem>() to serializableType<ProfileItem>()
+        )
+        fun from(savedStateHandle: SavedStateHandle): ProfileScreen =
+            savedStateHandle.toRoute(typeMap)
+    }
 }
 
 @Serializable

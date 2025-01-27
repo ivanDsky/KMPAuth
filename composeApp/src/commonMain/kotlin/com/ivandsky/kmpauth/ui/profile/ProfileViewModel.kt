@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ivandsky.kmpauth.data.auth.ProfileResponse
 import com.ivandsky.kmpauth.data.auth.ProfileService
 import com.ivandsky.kmpauth.navigation.NavigationEvent
 import com.ivandsky.kmpauth.navigation.Navigator
@@ -44,30 +45,33 @@ class ProfileViewModel(
     val profileState = _profileState.asStateFlow()
 
     init {
-        //val data = savedStateHandle.toRoute<ProfileScreen>()
-        profileService.profile().onEach { state ->
-            when(state) {
-                is NetworkState.Result -> _profileState.update {
-                    it.copy(
-                        id = state.data.id,
-                        username = state.data.username,
-                        email = state.data.email,
-                        role = state.data.roles.first(),
-                        avatarUrl = state.data.avatar ?: "",
-                        isVerified = state.data.enabled,
-                        isLoading = false,
-                        error = null
-                    )
+        val data = ProfileScreen.from(savedStateHandle)
+        if(data.profileItem.id != -1L) {
+            _profileState.value = data.profileItem
+        } else {
+            profileService.profile().onEach { state ->
+                when(state) {
+                    is NetworkState.Result -> _profileState.update {
+                        it.copy(
+                            id = state.data.id,
+                            username = state.data.username,
+                            email = state.data.email,
+                            role = state.data.roles.first(),
+                            avatarUrl = state.data.avatar ?: "",
+                            isVerified = state.data.enabled,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+                    is NetworkState.Error -> _profileState.update {
+                        it.copy(isLoading = false, error = state.error)
+                    }
+                    NetworkState.Loading -> _profileState.update {
+                        it.copy(isLoading = true, error = null)
+                    }
                 }
-                is NetworkState.Error -> _profileState.update {
-                    it.copy(isLoading = false, error = state.error)
-                }
-                NetworkState.Loading -> _profileState.update {
-                    it.copy(isLoading = true, error = null)
-                }
-            }
-        }.launchIn(viewModelScope)
-
+            }.launchIn(viewModelScope)
+        }
     }
 
     fun navigateToProfiles() = viewModelScope.launch {

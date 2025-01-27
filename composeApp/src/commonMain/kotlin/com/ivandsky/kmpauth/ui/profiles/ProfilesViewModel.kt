@@ -57,6 +57,6 @@ class ProfilesViewModel(
     }
 
     fun onProfileSelected(profileItem: ProfileItem) = viewModelScope.launch {
-        navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen()))
+        navigator.navigate(NavigationEvent.NavigateTo(ProfileScreen(profileItem)))
     }
 }

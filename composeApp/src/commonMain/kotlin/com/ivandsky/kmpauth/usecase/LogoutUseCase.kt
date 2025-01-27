@@ -11,6 +11,7 @@ class LogoutUseCase(
 ) {
     suspend operator fun invoke() {
         authDataStore.clearToken()
+        authDataStore.clearEmail()
         httpClient.authProvider<BearerAuthProvider>()?.clearToken()
     }
 }

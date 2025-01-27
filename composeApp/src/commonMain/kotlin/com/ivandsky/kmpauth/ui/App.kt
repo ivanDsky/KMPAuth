@@ -23,12 +23,15 @@ import com.ivandsky.kmpauth.navigation.RegisterScreen
 import com.ivandsky.kmpauth.ui.auth.login.LoginScreen
 import com.ivandsky.kmpauth.ui.auth.otp.OTPScreen
 import com.ivandsky.kmpauth.ui.auth.register.RegisterScreen
+import com.ivandsky.kmpauth.ui.profile.ProfileItem
 import com.ivandsky.kmpauth.ui.profiles.ProfileListScreen
+import com.ivandsky.kmpauth.util.serializableType
 import com.mmk.kmpauth.google.GoogleAuthCredentials
 import com.mmk.kmpauth.google.GoogleAuthProvider
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import kotlin.reflect.typeOf
 
 @Composable
 @Preview
@@ -84,7 +87,9 @@ fun Navigator(
         composable<RegisterScreen> {
             RegisterScreen()
         }
-        composable<ProfileScreen> {
+        composable<ProfileScreen>(
+            typeMap = ProfileScreen.typeMap
+        ) {
             com.ivandsky.kmpauth.ui.profile.ProfileScreen()
         }
         composable<ProfilesScreen> {

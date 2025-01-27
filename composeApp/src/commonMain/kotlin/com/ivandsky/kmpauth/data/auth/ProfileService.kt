@@ -34,7 +34,6 @@ class ProfileService(
 
     fun allProfiles(): Flow<NetworkState<List<ProfileResponse>>> = networkRequestFlow {
         val token = authDataStore.getToken()
-        println(token)
         httpClient.get("$URL/all") {
             headers { append(HttpHeaders.Authorization, "Bearer $token") }
         }
