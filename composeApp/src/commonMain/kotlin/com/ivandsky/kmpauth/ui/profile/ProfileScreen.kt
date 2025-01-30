@@ -19,6 +19,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -62,6 +63,11 @@ fun ProfileScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Profile", fontSize = 18.sp) },
+                navigationIcon = {
+                    IconButton(onClick = viewModel::navigateBack) {
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, null)
+                    }
+                },
                 actions = {
                     if(state.isAdmin()){
                         IconButton(onClick = viewModel::navigateToProfiles) {
@@ -75,22 +81,28 @@ fun ProfileScreen(
             )
         }
     ) { padding ->
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        when{
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        } else {
-            ProfileContent(
-                state = state,
-                modifier = Modifier.padding(padding)
-            )
-            state.error?.let {
-                ErrorMessage(text = it)
+            state.error != null -> {
+                ErrorMessage(
+                    modifier = Modifier.padding(padding),
+                    text = state.error!!
+                )
+            }
+            else -> {
+                ProfileContent(
+                    state = state,
+                    modifier = Modifier.padding(padding)
+                )
             }
         }
     }

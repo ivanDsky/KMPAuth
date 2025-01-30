@@ -24,7 +24,12 @@ fun createHttpClient(authDataStore: AuthDataStore) : HttpClient =
         }
 //        install(Auth) {
 //            bearer {
+//                sendWithoutRequest { true }
 //                loadTokens {
+//                    val token = authDataStore.getToken()
+//                    token?.let { BearerTokens(accessToken = it, refreshToken = null) }
+//                }
+//                refreshTokens {
 //                    val token = authDataStore.getToken()
 //                    token?.let { BearerTokens(accessToken = it, refreshToken = null) }
 //                }

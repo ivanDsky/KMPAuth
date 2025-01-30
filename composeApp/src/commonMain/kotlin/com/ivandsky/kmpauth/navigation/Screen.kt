@@ -22,7 +22,7 @@ data object RegisterScreen : Screen {
 }
 
 @Serializable
-class ProfileScreen(val profileItem: ProfileItem = ProfileItem(id = -1)) : Screen {
+class ProfileScreen(val profileItemId: Long = -1) : Screen {
     override val title: String = "Profile"
 
     companion object {

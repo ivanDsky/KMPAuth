@@ -25,9 +25,10 @@ class ProfileService(
     private val httpClient: HttpClient,
     private val authDataStore: AuthDataStore,
 ) {
-    fun profile(): Flow<NetworkState<ProfileResponse>> = networkRequestFlow {
+    fun profile(id: Long = -1L): Flow<NetworkState<ProfileResponse>> = networkRequestFlow {
         val token = authDataStore.getToken()
-        httpClient.get("$URL/") {
+        val url = if(id == -1L) "$URL/" else "$URL/${id}"
+        httpClient.get(url) {
             headers { append(HttpHeaders.Authorization, "Bearer $token") }
         }
     }

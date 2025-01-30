@@ -46,32 +46,32 @@ class ProfileViewModel(
 
     init {
         val data = ProfileScreen.from(savedStateHandle)
-        if(data.profileItem.id != -1L) {
-            _profileState.value = data.profileItem
-        } else {
-            profileService.profile().onEach { state ->
-                when(state) {
-                    is NetworkState.Result -> _profileState.update {
-                        it.copy(
-                            id = state.data.id,
-                            username = state.data.username,
-                            email = state.data.email,
-                            role = state.data.roles.first(),
-                            avatarUrl = state.data.avatar ?: "",
-                            isVerified = state.data.enabled,
-                            isLoading = false,
-                            error = null
-                        )
-                    }
-                    is NetworkState.Error -> _profileState.update {
-                        it.copy(isLoading = false, error = state.error)
-                    }
-                    NetworkState.Loading -> _profileState.update {
-                        it.copy(isLoading = true, error = null)
-                    }
+        profileService.profile(data.profileItemId).onEach { state ->
+            when(state) {
+                is NetworkState.Result -> _profileState.update {
+                    it.copy(
+                        id = state.data.id,
+                        username = state.data.username,
+                        email = state.data.email,
+                        role = state.data.roles.first(),
+                        avatarUrl = state.data.avatar ?: "",
+                        isVerified = state.data.enabled,
+                        isLoading = false,
+                        error = null
+                    )
                 }
-            }.launchIn(viewModelScope)
-        }
+                is NetworkState.Error -> _profileState.update {
+                    it.copy(isLoading = false, error = state.error)
+                }
+                NetworkState.Loading -> _profileState.update {
+                    it.copy(isLoading = true, error = null)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    fun navigateBack() = viewModelScope.launch {
+        navigator.navigate(NavigationEvent.PopBackStack)
     }
 
     fun navigateToProfiles() = viewModelScope.launch {

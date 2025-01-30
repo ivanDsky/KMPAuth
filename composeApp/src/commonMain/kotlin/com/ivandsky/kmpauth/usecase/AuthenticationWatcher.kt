@@ -6,6 +6,13 @@ import com.ivandsky.kmpauth.navigation.NavigationEvent
 import com.ivandsky.kmpauth.navigation.Navigator
 import com.ivandsky.kmpauth.navigation.ProfileScreen
 import com.ivandsky.kmpauth.navigation.ProfilesScreen
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
+import io.ktor.client.plugins.plugin
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.utils.HttpResponseCancelled
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

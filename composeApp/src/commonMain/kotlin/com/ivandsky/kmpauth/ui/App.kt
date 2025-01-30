@@ -72,6 +72,9 @@ fun Navigator(
                         navController.navigate(it.screen)
                     }
                 }
+                NavigationEvent.PopBackStack -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -87,9 +90,7 @@ fun Navigator(
         composable<RegisterScreen> {
             RegisterScreen()
         }
-        composable<ProfileScreen>(
-            typeMap = ProfileScreen.typeMap
-        ) {
+        composable<ProfileScreen> {
             com.ivandsky.kmpauth.ui.profile.ProfileScreen()
         }
         composable<ProfilesScreen> {

@@ -8,6 +8,7 @@ sealed interface NavigationEvent {
         val screen: Screen,
         val clearStack: Boolean = false
     ) : NavigationEvent
+    data object PopBackStack : NavigationEvent
 }
 
 class Navigator {
