@@ -41,12 +41,6 @@ fun App() {
             modules(networkModule, serviceModule, viewModelModule, dataStoreModule, useCaseModule, navigationModule)
         }
     ) {
-        GoogleAuthProvider.create(credentials =
-            GoogleAuthCredentials(
-                serverId = "125815290751-5ob84urrher3sab4nvp6u2f3j50rcnf6.apps.googleusercontent.com"
-            )
-        )
-
         Navigator(modifier = Modifier.fillMaxSize())
     }
 }
