@@ -37,7 +37,7 @@ class OTPViewModel(
     private var timerJob: Job? = null
 
     init {
-        startCountdown()
+        resendOTP()
     }
 
     fun onOTPChange(newOtp: String) {

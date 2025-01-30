@@ -7,6 +7,7 @@ import com.ivandsky.kmpauth.data.auth.LoginRequest
 import com.ivandsky.kmpauth.local.AuthDataStore
 import com.ivandsky.kmpauth.navigation.NavigationEvent
 import com.ivandsky.kmpauth.navigation.Navigator
+import com.ivandsky.kmpauth.navigation.OTPScreen
 import com.ivandsky.kmpauth.navigation.ProfileScreen
 import com.ivandsky.kmpauth.navigation.RegisterScreen
 import com.ivandsky.kmpauth.util.NetworkState
@@ -52,6 +53,10 @@ class LoginViewModel(
         }
     }
 
+    fun navigateToOTP() = viewModelScope.launch {
+        navigator.navigate(NavigationEvent.NavigateTo(OTPScreen))
+    }
+
     fun navigateToRegister() = viewModelScope.launch {
         navigator.navigate(NavigationEvent.NavigateTo(RegisterScreen, clearStack = true))
     }
@@ -74,14 +79,20 @@ class LoginViewModel(
         if(!validateAll()) return@launch
         authService.login(
             LoginRequest(loginState.value.usernameEmail.field, loginState.value.password.field)
-        ).onEach { s ->
-            when(s) {
+        ).onEach { state ->
+            when(state) {
                 is NetworkState.Result -> {
                     _loginState.update { it.copy(isLoading = false) }
-                    authDataStore.saveToken(s.data.token)
+                    authDataStore.saveToken(state.data.token)
                     navigateToProfile()
                 }
-                is NetworkState.Error -> _loginState.update { it.copy(isLoading = false, error = s.error) }
+                is NetworkState.Error -> {
+                    _loginState.update { it.copy(isLoading = false, error = state.error) }
+                    if (state.error.contains("Account not verified")) {
+                        authDataStore.saveEmail(_loginState.value.usernameEmail.field)
+                        navigateToOTP()
+                    }
+                }
                 NetworkState.Loading -> _loginState.update { it.copy(isLoading = true) }
             }
         }.launchIn(viewModelScope)
